@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDatabase from './database/db.js';
 import expenseRoutes from './routes/expenses.js';
+import userRoutes from './routes/user.js';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(express.json());
 connectDatabase();
 
 app.use('/api/expenses', expenseRoutes);
+app.use('/api/users', userRoutes);
 
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
