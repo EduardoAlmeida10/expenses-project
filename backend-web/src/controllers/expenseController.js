@@ -1,6 +1,6 @@
-const Expense = require('../models/Expense');
+import Expense from '../models/Expense.js';
 
-exports.createExpense = async (req, res) => {
+export const createExpense = async (req, res) => {
   try {
     const { title, description, users } = req.body;
 
@@ -9,15 +9,15 @@ exports.createExpense = async (req, res) => {
     }
 
     const expense = new Expense({ title, description, users });
-    await expense.save();
 
+    await expense.save();
     res.status(201).json(expense);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
 };
 
-exports.getExpenses = async (req, res) => {
+export const getExpenses = async (req, res) => {
   try {
     const expenses = await Expense.find().populate('users.userId', 'name');
     res.json(expenses);
@@ -26,7 +26,7 @@ exports.getExpenses = async (req, res) => {
   }
 };
 
-exports.updateExpense = async (req, res) => {
+export const updateExpense = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, description, users } = req.body;
@@ -34,12 +34,10 @@ exports.updateExpense = async (req, res) => {
     const updated = await Expense.findByIdAndUpdate(
       id,
       { title, description, users },
-      { new: true, runValidators: true }
+      { new: true }
     );
 
-    if (!updated) {
-      return res.status(404).json({ error: 'Expense not found.' });
-    }
+    if (!updated) return res.status(404).json({ error: 'Expense not found.' });
 
     res.json(updated);
   } catch (err) {
@@ -47,15 +45,12 @@ exports.updateExpense = async (req, res) => {
   }
 };
 
-exports.deleteExpense = async (req, res) => {
+export const deleteExpense = async (req, res) => {
   try {
     const { id } = req.params;
 
     const deleted = await Expense.findByIdAndDelete(id);
-
-    if (!deleted) {
-      return res.status(404).json({ error: 'Expense not found.' });
-    }
+    if (!deleted) return res.status(404).json({ error: 'Expense not found.' });
 
     res.json({ message: 'Expense deleted successfully.' });
   } catch (err) {

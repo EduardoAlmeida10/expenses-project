@@ -1,9 +1,13 @@
 import express from 'express';
 import cors from 'cors';
+import dotenv from 'dotenv';
 import connectDatabase from './database/db.js';
+import expenseRoutes from './routes/expenses.js';
+
+dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 
 app.use(
   cors({
@@ -16,9 +20,7 @@ app.use(express.json());
 
 connectDatabase();
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+app.use('/api/expenses', expenseRoutes);
 
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
