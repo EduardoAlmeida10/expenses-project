@@ -1,22 +1,25 @@
 import Expense from '../models/Expense.js';
+import User from '../models/User.js';
 
 export const createExpense = async (req, res) => {
   try {
-    const { title, description, users } = req.body;
+    const { title, description, participants } = req.body;
 
-    if (!users || users.length === 0) {
-      return res.status(400).json({ error: 'At least one user must be provided.' });
+    if (!participants || participants.length === 0) {
+      return res.status(400).json({ error: 'At least one participant must be provided.' });
     }
 
-    const usersWithNumbers = users.map((user, index) => ({
-      ...user,
-      userId: index + 1,
-    }));
-
-    const expense = new Expense({ title, description, users: usersWithNumbers });
+    const expense = new Expense({
+      title,
+      description,
+      participants: participants.map(p => ({
+        user: p.userId,
+        paid: p.paid || false,
+      })),
+    });
 
     await expense.save();
-    res.status(201).json(expense);
+    res.status(201).json(await expense.populate('participants.user', 'name'));
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -24,7 +27,7 @@ export const createExpense = async (req, res) => {
 
 export const getExpenses = async (req, res) => {
   try {
-    const expenses = await Expense.find().populate('users.userId', 'name');
+    const expenses = await Expense.find().populate('participants.user', 'name');
     res.json(expenses);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -34,13 +37,20 @@ export const getExpenses = async (req, res) => {
 export const updateExpense = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, users } = req.body;
+    const { title, description, participants } = req.body;
 
     const updated = await Expense.findByIdAndUpdate(
       id,
-      { title, description, users },
+      {
+        title,
+        description,
+        participants: participants.map(p => ({
+          user: p.userId,
+          paid: p.paid || false,
+        })),
+      },
       { new: true }
-    );
+    ).populate('participants.user', 'name');
 
     if (!updated) return res.status(404).json({ error: 'Expense not found.' });
 
