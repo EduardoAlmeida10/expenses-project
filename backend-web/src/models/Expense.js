@@ -1,3 +1,4 @@
+// models/Expense.js
 import mongoose from 'mongoose';
 
 const expenseSchema = new mongoose.Schema({
@@ -9,14 +10,11 @@ const expenseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  users: [
+  participants: [
     {
-      userId: {
+      user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-      },
-      name: {
-        type: String,
         required: true,
       },
       paid: {

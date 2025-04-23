@@ -8,7 +8,12 @@ export const createExpense = async (req, res) => {
       return res.status(400).json({ error: 'At least one user must be provided.' });
     }
 
-    const expense = new Expense({ title, description, users });
+    const usersWithNumbers = users.map((user, index) => ({
+      ...user,
+      userId: index + 1,
+    }));
+
+    const expense = new Expense({ title, description, users: usersWithNumbers });
 
     await expense.save();
     res.status(201).json(expense);
