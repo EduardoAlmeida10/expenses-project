@@ -10,10 +10,10 @@ export default function Home() {
   const [openOverlay, setOpenOverlay] = useState(false);
 
   return (
-    <div className="">
+    <div className="relative">
       <NavBar setOpenOverlay={setOpenOverlay} />
       <Card />
-      {openOverlay && <Overlay />}
+      {openOverlay && <Overlay setOpenOverlay={setOpenOverlay}/>}
     </div>
   );
 }
