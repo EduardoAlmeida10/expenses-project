@@ -24,8 +24,7 @@ export function Card() {
           paid: p.paid,
         })),
       });
-
-      location.reload();
+      
     } catch (err) {
       console.error('Erro ao atualizar participante:', err);
     } finally {

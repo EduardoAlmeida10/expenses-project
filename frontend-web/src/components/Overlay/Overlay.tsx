@@ -13,7 +13,6 @@ export function Overlay({ setOpenOverlay }: { setOpenOverlay: (open: boolean) =>
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Validação simples
         if (!title.trim() || !description.trim()) {
             alert('Preencha título e descrição.');
             return;
@@ -24,10 +23,12 @@ export function Overlay({ setOpenOverlay }: { setOpenOverlay: (open: boolean) =>
             return;
         }
 
-        const participants = users.map(user => ({
-            userId: user._id,
-            paid: false,
-        }));
+        const participants = users
+            .filter(user => selectedUsers.includes(user._id))
+            .map(user => ({
+                userId: user._id,
+                paid: false,
+            }));
 
         try {
             setIsSubmitting(true);
@@ -38,7 +39,6 @@ export function Overlay({ setOpenOverlay }: { setOpenOverlay: (open: boolean) =>
                 participants,
             });
 
-            // Limpa e fecha
             setTitle('');
             setDescription('');
             setSelectedUsers([]);
@@ -104,9 +104,8 @@ export function Overlay({ setOpenOverlay }: { setOpenOverlay: (open: boolean) =>
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className={`${
-                            isSubmitting ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'
-                        } text-white px-4 py-2 rounded mt-4 transition-colors`}
+                        className={`${isSubmitting ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'
+                            } text-white px-4 py-2 rounded mt-4 transition-colors`}
                     >
                         {isSubmitting ? 'Adicionando...' : 'Adicionar despesa'}
                     </button>
