@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const url = 'http://localhost:3000/api/users'
+const url = 'http://localhost:5000/api/users'
 
 export default function useUsers() {
     const [users, setUsers] = useState([]);
