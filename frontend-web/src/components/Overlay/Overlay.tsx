@@ -1,6 +1,59 @@
+import { useState } from 'react';
 import { CircleX } from 'lucide-react';
+import useUsers from '../../hooks/useUser';
+import axios from 'axios';
 
 export function Overlay({ setOpenOverlay }: { setOpenOverlay: (open: boolean) => void }) {
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const { users, loading } = useUsers();
+    const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // Validação simples
+        if (!title.trim() || !description.trim()) {
+            alert('Preencha título e descrição.');
+            return;
+        }
+
+        if (selectedUsers.length === 0) {
+            alert('Selecione pelo menos um participante.');
+            return;
+        }
+
+        const participants = users.map(user => ({
+            userId: user._id,
+            paid: false,
+        }));
+
+        try {
+            setIsSubmitting(true);
+
+            await axios.post('http://localhost:5000/api/expenses', {
+                title,
+                description,
+                participants,
+            });
+
+            // Limpa e fecha
+            setTitle('');
+            setDescription('');
+            setSelectedUsers([]);
+            setOpenOverlay(false);
+        } catch (error) {
+            console.error('Erro ao criar despesa:', error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    if (loading) {
+        return <div>Carregando...</div>;
+    }
+
     return (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 ml-3 mr-3">
             <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-md relative">
@@ -9,11 +62,13 @@ export function Overlay({ setOpenOverlay }: { setOpenOverlay: (open: boolean) =>
                     onClick={() => setOpenOverlay(false)}
                     className="absolute top-2 right-2 text-black cursor-pointer"
                 />
-                <form className="flex flex-col gap-4 text-black">
+                <form className="flex flex-col gap-4 text-black" onSubmit={handleSubmit}>
                     <label className="flex flex-col">
                         <span className="text-[18px] font-bold mb-1">Título</span>
                         <input
                             type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
                             className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </label>
@@ -21,9 +76,40 @@ export function Overlay({ setOpenOverlay }: { setOpenOverlay: (open: boolean) =>
                         <span className="text-[18px] font-bold mb-1">Descrição</span>
                         <textarea
                             name="descricao"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
                             className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         ></textarea>
                     </label>
+                    <div className="flex flex-col">
+                        <span className="text-[18px] font-bold mb-1">Participantes</span>
+                        {users.map((user) => (
+                            <label key={user._id} className="flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    value={user._id}
+                                    checked={selectedUsers.includes(user._id)}
+                                    onChange={(e) => {
+                                        if (e.target.checked) {
+                                            setSelectedUsers([...selectedUsers, user._id]);
+                                        } else {
+                                            setSelectedUsers(selectedUsers.filter(id => id !== user._id));
+                                        }
+                                    }}
+                                />
+                                <span>{user.name}</span>
+                            </label>
+                        ))}
+                    </div>
+                    <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className={`${
+                            isSubmitting ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'
+                        } text-white px-4 py-2 rounded mt-4 transition-colors`}
+                    >
+                        {isSubmitting ? 'Adicionando...' : 'Adicionar despesa'}
+                    </button>
                 </form>
             </div>
         </div>

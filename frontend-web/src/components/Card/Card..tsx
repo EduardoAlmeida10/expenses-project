@@ -36,9 +36,9 @@ export function Card() {
   if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 ml-10 mr-10 text-black mt-10">
+    <div className="">
       {expenses.map((expense) => (
-        <div key={expense._id} className="mb-6">
+        <div key={expense._id} className="mb-6 bg-white shadow-md rounded-lg p-4 ml-10 mr-10 text-black mt-10 flex flex-col gap-2">
           <h2 className="text-xl font-semibold">{expense.title}</h2>
           <p className="text-gray-600">{expense.description}</p>
           <hr className="border-t border-gray-500 my-2" />
@@ -47,9 +47,8 @@ export function Card() {
             {expense.participants.map((p) => (
               <li
                 key={p.user._id}
-                className={`flex justify-between items-center text-lg font-semibold mt-2 p-2 pr-5 rounded-md ${
-                  p.paid ? 'bg-green-600' : 'bg-red-700'
-                } text-white`}
+                className={`flex justify-between items-center text-lg font-semibold mt-2 p-2 pr-5 rounded-md ${p.paid ? 'bg-green-600' : 'bg-red-700'
+                  } text-white`}
               >
                 <p>{p.user.name}</p>
                 <input

@@ -15,7 +15,7 @@ export default function useExpenses() {
       .then(res => setExpenses(res.data))
       .catch(err => console.error('Erro ao buscar despesas:', err))
       .finally(() => setLoading(false));
-  }, []);
+  }, [expenses]);
 
   return { expenses, loading };
 }

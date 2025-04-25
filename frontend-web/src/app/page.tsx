@@ -13,7 +13,7 @@ export default function Home() {
     <div className="relative">
       <NavBar setOpenOverlay={setOpenOverlay} />
       <Card />
-      {openOverlay && <Overlay setOpenOverlay={setOpenOverlay}/>}
+      {openOverlay && <Overlay setOpenOverlay={setOpenOverlay} />}
     </div>
   );
 }
