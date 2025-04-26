@@ -16,7 +16,7 @@ export function Card() {
         p.user._id === userId ? { ...p, paid: !currentPaid } : p
       );
 
-      await axios.put(`http://localhost:5000/api/expenses/${expenseId}`, {
+      await axios.put(`https://expenses-project-4erz.onrender.com/api/expenses/${expenseId}`, {
         title: expenseToUpdate.title,
         description: expenseToUpdate.description,
         participants: updatedParticipants.map((p) => ({

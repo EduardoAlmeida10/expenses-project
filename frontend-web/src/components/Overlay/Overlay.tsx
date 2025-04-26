@@ -33,7 +33,7 @@ export function Overlay({ setOpenOverlay }: { setOpenOverlay: (open: boolean) =>
         try {
             setIsSubmitting(true);
 
-            await axios.post('http://localhost:5000/api/expenses', {
+            await axios.post('https://expenses-project-4erz.onrender.com/api/expenses', {
                 title,
                 description,
                 participants,

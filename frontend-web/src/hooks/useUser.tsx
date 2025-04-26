@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { User } from '@/types';
 
-const url = 'http://localhost:5000/api/users'
+const url = 'https://expenses-project-4erz.onrender.com/api/users'
 
 export default function useUsers() {
     const [users, setUsers] = useState<User[]>([]);
