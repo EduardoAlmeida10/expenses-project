@@ -1,61 +1,37 @@
 import { useState } from 'react';
 import { CircleX } from 'lucide-react';
 import useFetchUsers from '../../hooks/users/useFetchUser';
-import axios from 'axios';
-
-//const url = 'https://expenses-project-4erz.onrender.com/api/expenses';
-const url = 'http://localhost:5000/api/expenses';
+import useCreateExpense from '../../hooks/expenses/useCreateExpense'
 
 export function Overlay({ setOpenOverlay }: { setOpenOverlay: (open: boolean) => void }) {
+    const { users, loading } = useFetchUsers();
+    const {createExpense} = useCreateExpense();
+
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const { users, loading } = useFetchUsers();
     const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (!title.trim() || !description.trim()) {
-            alert('Preencha título e descrição.');
-            return;
-        }
-
-        if (selectedUsers.length === 0) {
-            alert('Selecione pelo menos um participante.');
-            return;
-        }
-
-        const participants = users
-            .filter(user => selectedUsers.includes(user._id))
-            .map(user => ({
-                userId: user._id,
-                paid: false,
-            }));
-
         try {
-            setIsSubmitting(true);
-
-            await axios.post(url , {
+            await createExpense({
                 title,
                 description,
-                participants,
+                participantsIds: selectedUsers,
+                users,
             });
-
             setTitle('');
             setDescription('');
             setSelectedUsers([]);
             setOpenOverlay(false);
-        } catch (error) {
-            console.error('Erro ao criar despesa:', error);
-        } finally {
-            setIsSubmitting(false);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                alert(error.message || 'Erro ao adicionar despesa.');
+            }
         }
     };
 
-    if (loading) {
-        return <div>Carregando...</div>;
-    }
+    if (loading) return <div>Carregando...</div>
 
     return (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 ml-3 mr-3">
@@ -106,11 +82,9 @@ export function Overlay({ setOpenOverlay }: { setOpenOverlay: (open: boolean) =>
                     </div>
                     <button
                         type="submit"
-                        disabled={isSubmitting}
-                        className={`${isSubmitting ? 'bg-gray-400' : 'bg-blue-500 hover:bg-blue-600'
-                            } text-white px-4 py-2 rounded mt-4 transition-colors`}
+                        className={"bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-4 transition-colors"}
                     >
-                        {isSubmitting ? 'Adicionando...' : 'Adicionar despesa'}
+                        Adicionar despesa
                     </button>
                 </form>
             </div>
