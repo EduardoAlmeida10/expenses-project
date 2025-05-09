@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { CircleX } from 'lucide-react';
-import useUsers from '../../hooks/useUser';
+import useFetchUsers from '../../hooks/users/useFetchUser';
 import axios from 'axios';
+
+//const url = 'https://expenses-project-4erz.onrender.com/api/expenses';
+const url = 'http://localhost:5000/api/expenses';
 
 export function Overlay({ setOpenOverlay }: { setOpenOverlay: (open: boolean) => void }) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const { users, loading } = useUsers();
+    const { users, loading } = useFetchUsers();
     const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -33,7 +36,7 @@ export function Overlay({ setOpenOverlay }: { setOpenOverlay: (open: boolean) =>
         try {
             setIsSubmitting(true);
 
-            await axios.post('https://expenses-project-4erz.onrender.com/api/expenses', {
+            await axios.post(url , {
                 title,
                 description,
                 participants,

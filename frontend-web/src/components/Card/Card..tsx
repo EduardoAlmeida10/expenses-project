@@ -1,36 +1,9 @@
-import { useState } from 'react';
-import useExpenses from '../../hooks/useExpense';
-import axios from 'axios';
+import useFetchExpenses from '../../hooks/expenses/useFetchExpense';
+import useUpdateExpense from '../../hooks/expenses/useUpdateExpense';
 
 export function Card() {
-  const { expenses, loading } = useExpenses();
-  const [updating, setUpdating] = useState(false);
-
-  const togglePaid = async (expenseId: string, userId: string, currentPaid: boolean) => {
-    setUpdating(true);
-    try {
-      const expenseToUpdate = expenses.find((e) => e._id === expenseId);
-      if (!expenseToUpdate) return;
-
-      const updatedParticipants = expenseToUpdate.participants.map((p) =>
-        p.user._id === userId ? { ...p, paid: !currentPaid } : p
-      );
-
-      await axios.put(`https://expenses-project-4erz.onrender.com/api/expenses/${expenseId}`, {
-        title: expenseToUpdate.title,
-        description: expenseToUpdate.description,
-        participants: updatedParticipants.map((p) => ({
-          userId: p.user._id,
-          paid: p.paid,
-        })),
-      });
-      
-    } catch (err) {
-      console.error('Erro ao atualizar participante:', err);
-    } finally {
-      setUpdating(false);
-    }
-  };
+  const { expenses, loading } = useFetchExpenses();
+  const { putPaid, updating } = useUpdateExpense(expenses);
 
   if (loading) return <p>Loading...</p>;
 
@@ -54,7 +27,7 @@ export function Card() {
                   type="checkbox"
                   className="w-5 h-5"
                   checked={p.paid}
-                  onChange={() => togglePaid(expense._id, p.user._id, p.paid)}
+                  onChange={() => putPaid(expense._id, p.user._id, p.paid)}
                   disabled={updating}
                 />
               </li>
