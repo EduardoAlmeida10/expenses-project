@@ -3,7 +3,7 @@ import User from '../models/User.js';
 
 export const createExpense = async (req, res) => {
   try {
-    const { title, description, participants } = req.body;
+    const { title, description, amount, participants } = req.body;
 
     if (!participants || participants.length === 0) {
       return res.status(400).json({ error: 'At least one participant must be provided.' });
@@ -12,6 +12,7 @@ export const createExpense = async (req, res) => {
     const expense = new Expense({
       title,
       description,
+      amount,
       participants: participants.map(p => ({
         user: p.userId,
         paid: p.paid || false,
@@ -19,6 +20,16 @@ export const createExpense = async (req, res) => {
     });
 
     await expense.save();
+
+    await Promise.all(
+      participants.map(async (p) => {
+        await User.findByIdAndUpdate(
+          p.userId,
+          { $inc: { amountTotal: amount } }
+        );
+      })
+    );
+    
     res.status(201).json(await expense.populate('participants.user', 'name'));
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -37,13 +48,14 @@ export const getExpenses = async (req, res) => {
 export const updateExpense = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, participants } = req.body;
+    const { title, description, amount, participants } = req.body;
 
     const updated = await Expense.findByIdAndUpdate(
       id,
       {
         title,
         description,
+        amount,
         participants: participants.map(p => ({
           user: p.userId,
           paid: p.paid || false,

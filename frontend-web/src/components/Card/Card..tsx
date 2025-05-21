@@ -13,6 +13,7 @@ export function Card() {
         <div key={expense._id} className="mb-6 bg-white shadow-md rounded-lg p-4 ml-10 mr-10 text-black mt-10 flex flex-col gap-2">
           <h2 className="text-xl font-semibold">{expense.title}</h2>
           <p className="text-gray-600">{expense.description}</p>
+          <p className='flex items-center justify-center bg-gray-950 text-white w-50 py-1 rounded'>Valor a ser pago: R$ {expense.amount}</p>
           <hr className="border-t border-gray-500 my-2" />
 
           <ul>

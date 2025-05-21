@@ -5,10 +5,11 @@ import useCreateExpense from '../../hooks/expenses/useCreateExpense'
 
 export function Overlay({ setOpenOverlay }: { setOpenOverlay: (open: boolean) => void }) {
     const { users, loading } = useFetchUsers();
-    const {createExpense} = useCreateExpense();
+    const { createExpense } = useCreateExpense();
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [amount, setAmount] = useState<number>(0);
     const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -17,6 +18,7 @@ export function Overlay({ setOpenOverlay }: { setOpenOverlay: (open: boolean) =>
             await createExpense({
                 title,
                 description,
+                amount,
                 participantsIds: selectedUsers,
                 users,
             });
@@ -59,6 +61,15 @@ export function Overlay({ setOpenOverlay }: { setOpenOverlay: (open: boolean) =>
                             onChange={(e) => setDescription(e.target.value)}
                             className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                         ></textarea>
+                    </label>
+                    <label>
+                        <span className="text-[18px] font-bold mb-1">Valor: </span>
+                        <input
+                            type="text"
+                            value={amount}
+                            onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
+                            className="border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 w-15 pl-1"
+                        />
                     </label>
                     <div className="flex flex-col">
                         <span className="text-[18px] font-bold mb-1">Participantes</span>

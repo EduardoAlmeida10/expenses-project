@@ -2,8 +2,8 @@ import { useState } from 'react';
 import axios from 'axios';
 import { Expense } from '@/types';
 
-const url = 'https://expenses-project-4erz.onrender.com/api/expenses';
-//const url = 'http://localhost:5000/api/expenses';
+//const url = 'https://expenses-project-4erz.onrender.com/api/expenses';
+const url = 'http://localhost:5000/api/expenses';
 
 export default function useUpdateExpense(expenses: Expense[]) {
   const [updating, setUpdating] = useState(false);
@@ -21,6 +21,7 @@ export default function useUpdateExpense(expenses: Expense[]) {
       await axios.put(`${url}/${expenseId}`, {
         title: expenseToUpdate.title,
         description: expenseToUpdate.description,
+        amount: expenseToUpdate.amount,
         participants: updatedParticipants.map((p) => ({
           userId: p.user._id,
           paid: p.paid,

@@ -1,21 +1,23 @@
 import axios from "axios";
 
-const url = 'https://expenses-project-4erz.onrender.com/api/expenses';
-//const url = 'http://localhost:5000/api/expenses';
+//const url = 'https://expenses-project-4erz.onrender.com/api/expenses';
+const url = 'http://localhost:5000/api/expenses';
 
 export default function useCreateExpense() {
     const createExpense = async ({
         title,
         description,
+        amount,
         participantsIds,
         users
     }: {
         title: string;
         description: string;
+        amount: number;
         participantsIds: string[];
         users: { _id: string }[];
     }) => {
-        if (!title.trim() || !description.trim()) {
+        if (!title.trim() || !description.trim() || !amount) {
             throw new Error('Preencha título e descrição.');
         }
 
@@ -33,6 +35,7 @@ export default function useCreateExpense() {
         await axios.post(url, {
             title,
             description,
+            amount,
             participants,
         });
     }
