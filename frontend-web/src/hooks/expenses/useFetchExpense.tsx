@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Expense } from '@/types';
 
-//const url = 'https://expenses-project-4erz.onrender.com/api/expenses'
-const url = 'http://localhost:5000/api/expenses';
+const url = 'https://expenses-project-4erz.onrender.com/api/expenses'
+//const url = 'http://localhost:5000/api/expenses';
 
 export default function useFetchExpenses() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
