@@ -9,10 +9,6 @@ const expenseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  amount: {
-    type: Number,
-    required: true,
-  },
   participants: [
     {
       user: {
@@ -23,6 +19,10 @@ const expenseSchema = new mongoose.Schema({
       paid: {
         type: Boolean,
         default: false,
+      },
+      amount: {
+        type: Number,
+        required: true,
       },
     },
   ],
