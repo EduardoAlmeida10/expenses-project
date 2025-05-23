@@ -13,7 +13,6 @@ export function Card() {
         <div key={expense._id} className="mb-6 bg-white shadow-md rounded-lg p-4 ml-10 mr-10 text-black mt-5 flex flex-col gap-2">
           <h2 className="text-xl font-semibold">{expense.title}</h2>
           <p className="text-gray-600">{expense.description}</p>
-          <p className='flex items-center justify-center bg-gray-950 text-white w-50 py-1 rounded'>Valor a ser pago: R$ {expense.amount}</p>
           <hr className="border-t border-gray-500 my-2" />
 
           <ul>
@@ -24,13 +23,16 @@ export function Card() {
                   } text-white`}
               >
                 <p>{p.user.name}</p>
-                <input
-                  type="checkbox"
-                  className="w-5 h-5"
-                  checked={p.paid}
-                  onChange={() => putPaid(expense._id, p.user._id, p.paid)}
-                  disabled={updating}
-                />
+                <div className='flex gap-5'>
+                  <p>Valor: R$ {p.amount}</p>
+                  <input
+                    type="checkbox"
+                    className="w-5 h-5"
+                    checked={p.paid}
+                    onChange={() => putPaid(expense._id, p.user._id, p.paid)}
+                    disabled={updating}
+                  />
+                </div>
               </li>
             ))}
           </ul>

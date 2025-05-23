@@ -7,12 +7,12 @@ export interface User {
 export interface Participant {
     user: User;
     paid: boolean;
+    amount: number;
 }
 
 export interface Expense {
     _id: string;
     title: string;
     description: string;
-    amount: number;
     participants: Participant[];
 }
