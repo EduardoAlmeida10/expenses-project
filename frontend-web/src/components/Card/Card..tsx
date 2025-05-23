@@ -23,7 +23,7 @@ export function Card() {
                   } text-white`}
               >
                 <p>{p.user.name}</p>
-                <div className='flex gap-5'>
+                <div className='flex gap-5 items-center'>
                   <p>Valor: R$ {p.amount}</p>
                   <input
                     type="checkbox"
