@@ -10,8 +10,8 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT;
 
-//const url = 'https://expenses-project-kappa.vercel.app'
-const url = 'http://localhost:3000';
+const url = 'https://expenses-project-kappa.vercel.app'
+//const url = 'http://localhost:3000';
 
 app.use(
   cors({

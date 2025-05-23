@@ -1,7 +1,7 @@
 import axios from "axios";
 
-//const url = 'https://expenses-project-4erz.onrender.com/api/expenses';
-const url = 'http://localhost:5000/api/expenses';
+const url = 'https://expenses-project-4erz.onrender.com/api/expenses';
+//const url = 'http://localhost:5000/api/expenses';
 
 export default function useCreateExpense() {
     const createExpense = async ({
